@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="櫃台POS">
+  <meta name="theme-color" content="#717658">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+  <title>櫃台POS</title>
+</head>
+<body>
+  <header>
+    <h1>QianYuan - order.system</h1>
+    <div class="switch">
+      <button id="vCounter" class="on sp">櫃檯</button>
+      <button id="vKitchen" class="sp">廚房<i id="kBadge" class="badge" hidden></i></button>
+      <span class="vsep"></span>
+      <button id="vDone">已完成訂單</button>
+    </div>
+  </header>
+
+  <!-- 櫃台畫面 -->
+  <main id="counter">
+    <section class="menu">
+      <nav id="tabs"></nav>
+      <div id="grid"></div>
+    </section>
+    <aside class="cart">
+      <div class="mode">
+        <div id="modeSeg" class="seg"></div>
+        <div id="tableWrap" class="tbl">
+          <label for="table">桌號</label>
+          <input id="table" type="text" inputmode="numeric" autocomplete="off" maxlength="4">
+          <div id="sideSeg" class="seg mini"></div>
+        </div>
+      </div>
+      <h2>目前訂單</h2>
+      <div id="lines"></div>
+      <div class="total">合計 <span id="total">$0</span></div>
+      <div class="actions">
+        <button id="clear" class="ghost">清除</button>
+        <button id="send" class="primary">送出訂單</button>
+      </div>
+    </aside>
+  </main>
+
+  <!-- 廚房畫面（內容由程式產生） -->
+  <main id="kitchen" hidden></main>
+
+  <!-- 已完成訂單畫面（內容由程式產生） -->
+  <main id="done" hidden></main>
+
+  <!-- 必選／選填項目視窗（肉品、附餐、隨附調整） -->
+  <div id="modal" class="overlay" hidden>
+    <div class="sheet">
+      <h3 id="mTitle"></h3>
+      <div id="mGroups"></div>
+      <div class="actions">
+        <button id="mCancel" class="ghost">取消</button>
+        <button id="mOk" class="primary">加入訂單</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 手動輸入視窗（季節時蔬、期間限定） -->
+  <div id="cModal" class="overlay" hidden>
+    <div class="sheet">
+      <h3 id="cTitle"></h3>
+      <label class="fld">品名
+        <input id="cName" type="text" autocomplete="off" placeholder="照黑板上的字牌填寫">
+      </label>
+      <label class="fld">價格
+        <input id="cPrice" type="text" inputmode="numeric" autocomplete="off">
+      </label>
+      <div class="actions">
+        <button id="cCancel" class="ghost">取消</button>
+        <button id="cOk" class="primary">加入訂單</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+
+  <script src="menu.js"></script>
+  <script src="store.js"></script>
+  <script src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(function () {});
+    }
+  </script>
+</body>
+</html>

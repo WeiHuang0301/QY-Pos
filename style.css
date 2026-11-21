@@ -1,0 +1,408 @@
+/* =====================================================================
+   外觀設定檔
+   想改顏色：只要改下面「:root」裡的色碼（# 開頭那一串），其他地方不用動。
+   每個顏色只管「一個地方」，不會牽動別處。找不到就用 Command + F 搜尋中文註解。
+   ===================================================================== */
+:root {
+
+  /* ---------- 五種字體（編號跟設計圖上標的一樣） ---------- */
+  --font-1: "Nanum Gothic", "NanumGothic", "Apple SD Gothic Neo", "Helvetica Neue", "PingFang TC", "Noto Sans CJK TC", sans-serif;
+  --font-2: "蘭亭黑-繁", "Lantinghei TC", "PingFang TC", "Noto Sans TC", "Noto Sans CJK TC", sans-serif;
+  --font-3: "宋體-繁", "Songti TC", "STSong", "Noto Serif TC", "Noto Serif CJK TC", serif;
+  --font-4: "Shree Devanagari 714", "Helvetica Neue", "PingFang TC", "Noto Sans CJK TC", sans-serif;
+  --font-5: "Helvetica Neue", "PingFang TC", "Noto Sans TC", "Noto Sans CJK TC", sans-serif;
+  --font-6: "冬青黑體簡體中文", sans-serif;
+
+
+  /* ---------- 每個地方用哪一種（想換字體，把後面的 font-數字 換掉就好） ---------- */
+  --f-body:   var(--font-2);   /* 其他所有文字（菜單、訂單品名、金額、標籤、彈出視窗…） */
+  --f-logo:   var(--font-1);   /* 左上角店名 */
+  --f-hbtn:   var(--font-3);   /* 上方「櫃檯／廚房／已完成訂單」按鈕 */
+  --f-action: var(--font-3);   /* 「清除」「送出訂單」按鈕 */
+  --f-table:  var(--font-4);   /* 桌號輸入框裡的數字 */
+  --f-qty:    var(--font-5);   /* 訂單裡的數量（− 1 +） */
+  --f-ktitle: var(--font-5);   /* 廚房：出餐區標題 */
+  --f-kqty:   var(--font-6);   /* 廚房與已完成：品項前面的數量（1 x） */
+  --f-time:   var(--font-5);   /* 「7分鐘前」「13:32」 */
+  --f-no:     var(--font-5);   /* 單號「# 5」 */
+  --f-sum:    var(--font-4);   /* 已完成畫面上方的單數與總金額 */
+
+  /* ---------- 整體 ---------- */
+  --page-bg:        #dbd9cd;   /* 櫃台畫面底色 */
+  --mask:           rgba(0, 0, 0, .38);  /* 彈出視窗後面的暗色遮罩 */
+
+  /* ---------- 上方標題列 ---------- */
+  --header-bg:      #71784f;   /* 標題列底色 */
+  --header-title:   #fbf9ed;   /* 店名文字 */
+  --hbtn-bg:        #A29F75;   /* 「櫃檯／廚房／已完成訂單」按鈕底色（沒選到） */
+  --hbtn-text:      #59584F;   /* 按鈕文字（沒選到） */
+  --hbtn-on-bg:     #cec97e;   /* 按鈕底色（目前所在畫面） */
+  --hbtn-on-text:   #5A5538;   /* 按鈕文字（目前所在畫面） */
+  --hbtn-on-border: #A9A468;   /* 按鈕邊框（目前所在畫面） */
+  --header-sep:     #c6caaf;   /* 「廚房」與「已完成訂單」中間的直線 */
+  --badge-bg:       #d77943;   /* 廚房按鈕上「待處理數量」小圓點 */
+  --badge-text:     #ffffff;
+
+  /* ---------- 大分類（鍋物／加點） ---------- */
+  --gtab-bg:        #cdd0bb;   /* 沒選到 */
+  --gtab-text:      #969C6D;
+  --gtab-on-bg:     #a5ae64;   /* 選到 */
+  --gtab-on-text:   #f0f0e4;
+  --gtab-on-border: #919480;
+  --gtab-line:      #6C733D;   /* 大分類下面的橫線 */
+
+  /* ---------- 小分類（經典鍋物、風味鍋物…） ---------- */
+  --tab-border:     #b0a494;   /* 沒選到：框線 */
+  --tab-text:       #92806D;   /* 沒選到：文字 */
+  --tab-on-bg:      #6A543A;   /* 選到：底色 */
+  --tab-on-text:    #ECE8D3;
+  --tab-on-border:  #92806D;
+
+  /* ---------- 餐點格 ---------- */
+  --item-bg:        #DBD9CE;   /* 餐點格底色 */
+  --item-border:    #A39C88;   /* 餐點格框線 */
+  --item-name:      #6A5945;   /* 菜名 */
+  --item-line:      #947B5F;   /* 菜名下面的細線 */
+  --item-note:      #5D5D5D;   /* 小字說明（例如「無牛油」） */
+  --item-price:     #212121;   /* 價格 */
+  --item-press:     #cfccbc;   /* 手指按下去時的底色 */
+  --mark-hot:       #d86140;   /* 餐點左邊小直條：辣 */
+  --mark-veg:       #16a34a;   /* 餐點左邊小直條：素 */
+
+  /* ---------- 右側訂單欄 ---------- */
+  --cart-bg:        #D6D1BE;   /* 訂單欄底色 */
+  --cart-border:    #B4AE9E;   /* 訂單欄左邊的線 */
+  --seg-border:     #948B6B;   /* 「內用／外帶」切換：外框 */
+  --seg-bg:         #E2DCC9;   /* 切換：底色 */
+  --seg-text:       #948B6B;   /* 切換：沒選到的字 */
+  --seg-on-bg:      #B9AA8C;   /* 切換：選到的底色 */
+  --seg-on-text:    #ffffff;   /* 切換：選到的字 */
+  --tbl-label:      #6A5945;   /* 「桌號」兩個字 */
+  --input-bg:       #F0EEE0;   /* 桌號輸入框底色 */
+  --input-border:   #948B6B;   /* 桌號輸入框框線 */
+  --input-text:     #6A5945;   /* 桌號輸入框文字 */
+  --input-focus:    #6a5944;   /* 手指點進輸入框時的框線 */
+  --cart-title:     #6A5945;   /* 「目前訂單」 */
+  --cart-empty:     #8d806f;   /* 還沒點東西時的提示文字 */
+  --line-name:      #5F5345;   /* 訂單裡的品名 */
+  --line-pick:      #cc7f32;   /* /* 肉品：橘色 （例如「/ 豬」） */
+  --line-set:       #5e5244;   /* 附餐：深咖啡色 */
+  --line-price:     #5F5345;   /* 訂單裡的金額 */
+  --line-sep:       #A59663;   /* 訂單每一行之間的線 */
+  --qty-bg:         #88785A;   /* 加減數量圓形按鈕 */
+  --qty-text:       #f0eee1;
+  --qty-num:        #6A5945;   /* 數量數字 */
+  --otag-bg:        #dfc598;   /* 客製小標籤（例如「不蔥」）底色 */
+  --otag-bar:       #c26a2b;   /* 客製小標籤左邊的直條 */
+  --otag-text:      #5F5345;
+  --total-line:     #88785A;   /* 合計上方的粗線 */
+  --total-label:    #6A5945;   /* 「合計」兩個字 */
+  --total-value:    #5F5345;   /* 合計金額 */
+  --clear-bg:       #F1EFE4;   /* 「清除」按鈕 */
+  --clear-text:     #C1AA6A;
+  --send-bg:        #C1AA6A;   /* 「送出訂單」按鈕 */
+  --send-text:      #FFFEF6;
+  --send-off-bg:    #B8B09D;   /* 還沒點東西時，送出按鈕的底色 */
+
+  /* ---------- 彈出視窗（選肉品、手動輸入） ---------- */
+  --modal-bg:       #D6D1BE;
+  --modal-title:    #5e4931;   /* 餐點名稱 */
+  --modal-price:    #5F5345;   /* 餐點價格 */
+  --modal-label:    #5F5345;   /* 組名（例如「肉品」） */
+  --modal-must:     #b07c13;   /* 「必選」 */
+  --modal-opt:      #5F5345;   /* 「選填」 */
+  --chip-bg:        #DBD9CE;   /* 選項按鈕：沒選到 */
+  --chip-border:    #92806D;
+  --chip-text:      #8d806f;
+  --chip-on-bg:     #62492d;   /* 選項按鈕：選到 */
+  --chip-on-text:   #eee9d5;
+  --cancel-bg:      #DBD9CE;   /* 「取消」按鈕 */
+  --cancel-border:  #92806D;
+  --cancel-text:    #9c8a72;
+  --ok-bg:          #e09136;   /* 「加入訂單」按鈕 */
+  --ok-text:        #eee9d5;
+  --ok-border:      #96693a;   /* 「加入訂單」按钮的框线 */
+  --ok-off-bg:      #cdbfa6;   /* 還不能按時的底色 */
+  --ok-off-border:  #c19e72;
+  --field-label:    #5e5244;   /* 手動輸入視窗：欄位名稱 */
+
+  /* ---------- 廚房畫面 ---------- */
+  --k-page-bg:      #5b5545;   /* 廚房底色 */
+  --k-col-title:    #eadcb9;   /* 出餐區標題（湯品・肉盤…） */
+  --k-col-sep:      #b4aea0;   /* 兩個出餐區中間的直線 */
+  --k-ticket-bg:    #dbd9cd;   /* 單子底色 */
+  --k-dine-tag-bg:  #cdc09e;   /* 內用標籤 */
+  --k-dine-tag-text:#695844;
+  --k-take-tag-bg:  #6b451e;   /* 外帶標籤 */
+  --k-take-tag-text:#e0d6bb;
+  --k-time:         #656155;   /* 「7分鐘前」 */
+  --k-time-late:    #a94e3b;   /* 超過 10 分鐘變這個顏色 */
+  --k-qty:          #876528;   /* 數量（1 x） */
+  --k-name:         #5e5244;   /* 品名 */
+  --k-pick:         #b57e3e;   /* 品名後面的選擇（/ 豬） */
+  --k-opt:          #8f4538;   /* 客製（不加蔥…） */
+  --k-dots:         #8a8369;   /* 品項之間的點點線 */
+  --k-dine-done:    #85913b;   /* 內用單的「完成」按鈕 */
+  --k-take-done:    #917448;   /* 外帶單的「完成」按鈕 */
+  --k-done-text:    #efefed;
+  --k-num:          #817a66;   /* 單號「# 5」 */
+  --k-empty:        #b4aea0;   /* 沒有單時的提示文字 */
+
+  /* ---------- 已完成訂單畫面 ---------- */
+  --d-page-bg:      #bea97c;   /* 已完成畫面底色 */
+  --d-sum-title:    #5d4b23;   /* 「今日完成訂單:」與「合計」 */
+  --d-sum-n:        #69361b;   /* 單數 */
+  --d-sum-money:    #603723;   /* 總金額 */
+  --d-card-bg:      #dbd9cd;   /* 每一筆訂單的底色 */
+  --d-num:          #817a66;   /* 單號「# 2」 */
+  --d-time:         #5b5544;   /* 時間 */
+  --d-items:        #5e5244;   /* 品項文字 */
+  --d-pick:         #b57e3e;   /* 品項後面的選擇（/ 羊） */
+  --d-price:        #876528;   /* 每筆訂單的金額 */
+  --d-empty:        #5d4b23;   /* 還沒有完成的單時的提示文字 */
+}
+
+/* =====================================================================
+   以下是版面與尺寸，一般不需要動
+   ===================================================================== */
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+[hidden] { display: none !important; }
+
+html, body { height: 100%; margin: 0; }
+body {
+  font-family: var(--f-body);
+  background: var(--page-bg);
+  color: var(--item-name);
+  display: flex;
+  flex-direction: column;
+  user-select: none;
+  -webkit-user-select: none;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+button { font: inherit; color: inherit; border: 0; cursor: pointer; touch-action: manipulation; background: none; padding: 0; }
+/* iPad 上，輸入框一定要允許選取文字，否則打不了字 */
+input { font: inherit; user-select: text; -webkit-user-select: text; }
+input:focus { outline: none; border-color: var(--input-focus); }
+
+/* ---------- 上方標題列 ---------- */
+header {
+  background: var(--header-bg);
+  height: 80px; flex: none;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 28px;
+}
+header h1 {
+  margin: 0; font-family: var(--f-logo); font-weight: 300; font-size: 30px;
+  letter-spacing: .02em; color: var(--header-title);
+}
+.switch { display: flex; align-items: center; gap: 12px; }
+.switch button {
+  position: relative;
+  height: 54px; padding: 0 28px; border-radius: 14px;
+  background: var(--hbtn-bg); color: var(--hbtn-text);
+  border: 2px solid transparent;
+  font-family: var(--f-hbtn); font-size: 20px;
+}
+.switch button.sp { letter-spacing: .35em; padding-right: 22px; padding-left: calc(28px + .35em); }
+.switch button.on { background: var(--hbtn-on-bg); color: var(--hbtn-on-text); border-color: var(--hbtn-on-border); font-weight: 300; }
+.vsep { width: 2px; height: 50px; background: var(--header-sep); margin: 0 10px; }
+.badge {
+  position: absolute; top: -8px; right: -8px;
+  min-width: 26px; height: 26px; padding: 0 7px; border-radius: 13px;
+  background: var(--badge-bg); color: var(--badge-text);
+  font: 600 15px/26px var(--f-body); font-style: normal; letter-spacing: 0; text-align: center;
+}
+
+/* ---------- 櫃台：左邊菜單 ---------- */
+#counter { flex: 1; display: flex; min-height: 0; }
+.menu { flex: 1; display: flex; flex-direction: column; min-width: 0; padding: 20px 24px 16px; }
+
+#tabs { flex: none; }
+.grpbar { display: flex; gap: 14px; padding-bottom: 16px; margin-bottom: 16px; border-bottom: 2px solid var(--gtab-line); }
+.gtab {
+  height: 54px; padding: 0 32px; border-radius: 20px; font-size: 21px;
+  background: var(--gtab-bg); color: var(--gtab-text); border: 2px solid transparent;
+}
+.gtab.on { background: var(--gtab-on-bg); color: var(--gtab-on-text); border-color: var(--gtab-on-border); font-weight: 300; }
+.catbar { display: flex; flex-wrap: wrap; gap: 10px; }
+.tab {
+  flex: none; height: 50px; padding: 0 15px; border-radius: 12px; font-size: 19px; white-space: nowrap;
+  border: 1px solid var(--tab-border); color: var(--tab-text);
+}
+.tab.on { background: var(--tab-on-bg); color: var(--tab-on-text); border-color: var(--tab-on-border); }
+
+#grid {
+  flex: 1; overflow-y: auto; margin-top: 14px; padding-bottom: 8px;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px; align-content: start;
+}
+.item {
+  background: var(--item-bg); border: 1px solid var(--item-border); border-radius: 20px;
+  min-height: 124px; padding: 10px 16px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+  color: var(--item-name);
+}
+.item .nm { width: 100%; text-align: center; font-size: 21px; font-weight: 300;padding-bottom: 6px; border-bottom: 1px solid var(--item-line); }
+.item small { font-size: 15px; font-weight: 300;color: var(--item-note); }
+.item b { font-size: 23px; font-weight: 300; color: var(--item-price); }
+.item:active { background: var(--item-press); }
+.item.mk-hot { box-shadow: inset 8px 0 0 var(--mark-hot); }
+.item.mk-veg { box-shadow: inset 8px 0 0 var(--mark-veg); }
+
+/* ---------- 櫃台：右邊訂單欄 ---------- */
+.cart {
+  width: 400px; flex: none; background: var(--cart-bg); border-left: 1.5px solid var(--cart-border);
+  display: flex; flex-direction: column; padding: 16px 18px 18px;
+}
+.mode { display: flex; flex-direction: column; gap: 12px; }
+.seg { display: flex; background: var(--seg-bg); border: 1.5px solid var(--seg-border); border-radius: 26px; padding: 3px; gap: 2px; }
+.seg button { flex: 1; height: 42px; border-radius: 22px; font-size: 19px; color: var(--seg-text); white-space: nowrap; }
+.seg button.on { background: var(--seg-on-bg); color: var(--seg-on-text); font-weight: 300; }
+.tbl { display: flex; align-items: center; gap: 12px; font-size: 22px; color: var(--tbl-label); }
+.seg.mini { flex: none; width: 112px; }
+.seg.mini button { height: 38px; font-size: 20px; }
+.tbl input {
+  flex: 1; min-width: 0; height: 48px; font-family: var(--f-table); font-size: 26px; text-align: center;
+  background: var(--input-bg); color: var(--input-text);
+  border: 1.5px solid var(--input-border); border-radius: 14px;
+}
+.cart h2 { margin: 22px 0 6px; font-size: 22px; font-weight: 300; color: var(--cart-title); }
+
+#lines { flex: 1; overflow-y: auto; }
+.empty { color: var(--cart-empty); text-align: center; margin-top: 30px; }
+
+.line { padding: 12px 0; border-bottom: 1px solid var(--line-sep); }
+.line .top { display: flex; align-items: center; gap: 8px; }
+.line .name { flex: 1; font-size: 20px; line-height: 1.35; color: var(--line-name); }
+.pk { color: var(--line-pick); white-space: nowrap; }
+.line .pk { font-size: 20px; font-weight: 300; }                          /* 肉品：跟品名同大，颜色用橘色 */
+.line .pk.set { color: var(--line-set); font-size: 15px; font-weight: 600; }   /* 附餐：棕色、较小、较粗 */
+.line .sub { width: 66px; text-align: right; font-size: 20px; color: var(--line-price); }
+.qty { display: flex; align-items: center; gap: 8px; }
+.qty button { width: 38px; height: 38px; border-radius: 50%; background: var(--qty-bg); color: var(--qty-text); font-size: 22px; line-height: 1; }
+.qty b { min-width: 18px; text-align: center; font-family: var(--f-qty); font-size: 20px; font-weight: 400; color: var(--qty-num); }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.otag {
+  background: var(--otag-bg); color: var(--otag-text); font-size: 14px;
+  border-left: 4px solid var(--otag-bar); padding: 3px 10px 3px 8px;
+}
+
+.total {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 12px 4px 10px; margin-top: 4px; border-top: 3px solid var(--total-line);
+}
+.total { font-size: 21px; color: var(--total-label); }
+.total span { font-size: 32px; font-weight: 900; color: var(--total-value); }
+.actions { display: flex; gap: 12px; }
+.ghost, .primary { border-radius: 16px; font-family: var(--f-action); font-weight: 700; }
+.ghost { padding: 17px 26px; font-size: 20px; background: var(--clear-bg); color: var(--clear-text); }
+.primary { padding: 17px 20px; font-size: 22px; background: var(--send-bg); color: var(--send-text); }
+.actions .primary { flex: 1; }
+.primary:disabled { background: var(--send-off-bg); }
+.primary:active:not(:disabled) { filter: brightness(.94); }
+
+/* ---------- 廚房畫面 ---------- */
+#kitchen { flex: 1; background: var(--k-page-bg); padding: 22px 26px; display: flex; min-height: 0; }
+.kcol { flex: 1; display: flex; flex-direction: column; min-width: 0; min-height: 0; padding: 0 22px; }
+.kcol:first-child { padding-left: 0; }
+.kcol:last-child { padding-right: 0; }
+.kcol + .kcol { border-left: 1.5px solid var(--k-col-sep); }
+.kcol h2 { margin: 0 0 18px; font-family: var(--f-ktitle); font-weight: 400; font-size: 30px; color: var(--k-col-title); }
+.orders {
+  flex: 1; overflow-y: auto;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(236px, 1fr)); gap: 14px; align-content: start;
+}
+#kitchen .empty { color: var(--k-empty); grid-column: 1 / -1; font-size: 20px; margin-top: 40px; }
+
+.ticket { background: var(--k-ticket-bg); border-radius: 18px; padding: 16px 16px 14px; display: flex; flex-direction: column; }
+.tag {
+  display: inline-block; border-radius: 10px; padding: 5px 14px; font-size: 20px; font-weight: 600;
+}
+.tag.dine { background: var(--k-dine-tag-bg); color: var(--k-dine-tag-text); }
+.tag.take { background: var(--k-take-tag-bg); color: var(--k-take-tag-text); }
+.ticket .th { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.ticket .ago { font-family: var(--f-time); font-size: 15px; font-style: italic; color: var(--k-time); }
+.ticket.late .ago { color: var(--k-time-late); }
+.ticket ul { list-style: none; margin: 0 0 14px; padding: 0; flex: 1; }
+.ticket li { display: flex; align-items: baseline; gap: 10px; padding: 10px 0 9px; border-bottom: 2px dotted var(--k-dots); }
+.ticket li .q { flex: none; min-width: 48px; font-family: var(--f-kqty); font-size: 25px; font-weight: 700; color: var(--k-qty); white-space: nowrap; }
+.ticket li .ln { flex: 1; min-width: 0; }
+.ticket li .nm { font-size: 22px; line-height: 1.3; color: var(--k-name); }
+.ticket li .pk { color: var(--k-pick); }
+.ticket li em { display: block; margin-top: 2px; font-style: normal; font-size: 17px; color: var(--k-opt); }
+.ticket .tf { display: flex; align-items: center; gap: 12px; }
+.ticket .done { flex: 1; height: 52px; border-radius: 12px; font-size: 22px; color: var(--k-done-text); }
+.ticket.dine .done { background: var(--k-dine-done); }
+.ticket.take .done { background: var(--k-take-done); }
+.ticket .done:active { filter: brightness(.92); }
+.ticket .no { font-family: var(--f-no); font-weight: 200; font-size: 36px; color: var(--k-num); white-space: nowrap; }
+
+/* ---------- 已完成訂單畫面 ---------- */
+#done { flex: 1; background: var(--d-page-bg); padding: 22px 30px; overflow-y: auto; }
+.dsum { display: flex; align-items: baseline; gap: 56px; margin-bottom: 18px; color: var(--d-sum-title); }
+.dsum .t { font-size: 26px; font-weight: 600; }
+.dsum .s { font-size: 26px; font-weight: 600; }
+.dsum b { font-family: var(--f-sum); font-size: 34px; font-weight: 400; color: var(--d-sum-n); margin: 0 4px; }
+.dsum i { font-family: var(--f-sum); font-size: 34px; font-weight: 400; color: var(--d-sum-money); margin: 0 2px; }
+.dlist { max-width: 900px; }
+#done .empty { color: var(--d-empty); font-size: 20px; margin-top: 50px; }
+.drow { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; background: var(--d-card-bg); border-radius: 18px; padding: 14px 22px 14px; margin-bottom: 12px; }
+.dmain { flex: 1; min-width: 0; }
+.dh { display: flex; align-items: center; gap: 14px; margin-bottom: 8px; }
+.dh .no { font-family: var(--f-no); font-weight: 200; font-size: 34px; color: var(--d-num); white-space: nowrap; }
+.dh .tag { font-size: 18px; padding: 4px 14px; }
+.dh .dt { font-family: var(--f-time); font-size: 15px; font-style: italic; color: var(--d-time); }
+.di { display: flex; flex-wrap: wrap; gap: 6px 22px; font-size: 20px; line-height: 1.5; color: var(--d-items); }
+.di .pk { color: var(--d-pick); }
+.di .q { font-family: var(--f-kqty); }
+.di small { font-size: 15px; opacity: .8; }
+.dm { flex: none; font-size: 26px; font-weight: 600; color: var(--d-price); }
+
+/* ---------- 彈出視窗（必選項目、手動輸入） ---------- */
+.overlay {
+  position: fixed; inset: 0; background: var(--mask);
+  display: flex; align-items: center; justify-content: center; z-index: 10;
+}
+.sheet { background: var(--modal-bg); border-radius: 24px; padding: 26px 30px 28px; width: min(640px, 94vw); max-height: 92vh; overflow-y: auto; }
+.sheet h3 { margin: 0 0 22px; font-size: 28px; font-weight: 600; color: var(--modal-title); }
+.sheet h3 span { margin-left: 18px; font-weight: 300; color: var(--modal-price); }
+.grp { margin-bottom: 22px; }
+.gl { font-size: 25px; color: var(--modal-label); margin-bottom: 12px; font-weight: 300 }
+.gl small { margin-left: 8px; color: var(--modal-must); font-size: 15px; font-weight: 300 }
+.gl small.opt { color: var(--modal-opt); }
+.gopts { display: flex; flex-wrap: wrap; gap: 10px; }
+.chip {
+  height: 52px; padding: 0 22px; border-radius: 12px; font-size: 21px; font-weight: 300;
+  background: var(--chip-bg); color: var(--chip-text); border: 1px solid var(--chip-border);
+}
+.chip.on { background: var(--chip-on-bg); color: var(--chip-on-text); font-weight: 300; }
+.sheet .actions { margin-top: 28px; }
+.sheet .ghost { background: var(--cancel-bg); color: var(--cancel-text); border: 1px solid var(--cancel-border); font-family: var(--f-body); font-weight: 300; }
+.sheet .primary { background: var(--ok-bg); color: var(--ok-text); font-family: var(--f-body); font-weight: 300; border: 1px solid var(--ok-border); }
+.sheet .primary:disabled { background: var(--ok-off-bg); border-color: var(--ok-off-border); }
+.fld { display: block; margin-bottom: 14px; font-size: 19px; color: var(--field-label); }
+.fld input {
+  display: block; width: 100%; margin-top: 6px; font-size: 24px; padding: 12px;
+  background: var(--input-bg); color: var(--input-text);
+  border: 1.5px solid var(--input-border); border-radius: 12px;
+}
+
+/* ---------- 提示 ---------- */
+#toast {
+  position: fixed; left: 50%; bottom: 40px; transform: translate(-50%, 20px);
+  background: var(--tab-on-bg); color: var(--tab-on-text); padding: 14px 26px; border-radius: 999px; font-size: 20px;
+  opacity: 0; pointer-events: none; transition: .25s; z-index: 20;
+}
+#toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+/* ---------- 直向或小螢幕 ---------- */
+@media (max-width: 900px) {
+  header { padding: 0 16px; }
+  header h1 { font-size: 22px; }
+  #counter { flex-direction: column; }
+  .cart { width: auto; border-left: 0; border-top: 1.5px solid var(--cart-border); max-height: 50%; }
+  #kitchen { flex-direction: column; overflow-y: auto; }
+  .kcol, .kcol:first-child, .kcol:last-child { padding: 0 0 20px; }
+  .kcol + .kcol { border-left: 0; border-top: 1.5px solid var(--k-col-sep); padding-top: 20px; }
+}
