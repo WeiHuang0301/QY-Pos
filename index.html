@@ -16,9 +16,9 @@
     <h1>QianYuan - order.system</h1>
     <div class="switch">
       <button id="vCounter" class="on sp">櫃檯</button>
-      <button id="vKitchen" class="sp">廚房<i id="kBadge" class="badge" hidden></i></button>
+      <button id="vKitchen" class="sp">出單紀錄</button>
       <span class="vsep"></span>
-      <button id="vDone">已完成訂單</button>
+      <button id="vDone">訂單總覽<i id="kBadge" class="badge" hidden></i></button>
     </div>
   </header>
 
@@ -33,24 +33,27 @@
         <div id="modeSeg" class="seg"></div>
         <div id="tableWrap" class="tbl">
           <label for="table">桌號</label>
-          <input id="table" type="text" inputmode="numeric" autocomplete="off" maxlength="4">
+          <input id="table" type="text" inputmode="none" autocomplete="off" maxlength="4">
           <div id="sideSeg" class="seg mini"></div>
         </div>
+        <div id="pad" class="pad" hidden></div>
       </div>
       <h2>目前訂單</h2>
       <div id="lines"></div>
+      <div id="setInfo" class="setinfo" hidden></div>
       <div class="total">合計 <span id="total">$0</span></div>
       <div class="actions">
         <button id="clear" class="ghost">清除</button>
+        <button id="append" class="ghost append">追加點餐</button>
         <button id="send" class="primary">送出訂單</button>
       </div>
     </aside>
   </main>
 
-  <!-- 廚房畫面（內容由程式產生） -->
+  <!-- 出單紀錄畫面（內容由程式產生；只看不按） -->
   <main id="kitchen" hidden></main>
 
-  <!-- 已完成訂單畫面（內容由程式產生） -->
+  <!-- 訂單總覽畫面（內容由程式產生） -->
   <main id="done" hidden></main>
 
   <!-- 必選／選填項目視窗（肉品、附餐、隨附調整） -->
@@ -78,6 +81,17 @@
       <div class="actions">
         <button id="cCancel" class="ghost">取消</button>
         <button id="cOk" class="primary">加入訂單</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 追加點餐：選要追加到哪一張還沒結帳的訂單 -->
+  <div id="aModal" class="overlay" hidden>
+    <div class="sheet">
+      <h3>追加到哪一張訂單？</h3>
+      <div id="aList"></div>
+      <div class="actions">
+        <button id="aCancel" class="ghost">取消</button>
       </div>
     </div>
   </div>

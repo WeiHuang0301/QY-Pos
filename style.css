@@ -269,7 +269,7 @@ header h1 {
 }
 .cart h2 { margin: 22px 0 6px; font-size: 22px; font-weight: 300; color: var(--cart-title); }
 
-#lines { flex: 1; overflow-y: auto; }
+#lines { flex: 1; overflow-y: auto; overflow-x: hidden; }
 .empty { color: var(--cart-empty); text-align: center; margin-top: 30px; }
 
 .line { padding: 12px 0; border-bottom: 1px solid var(--line-sep); }
@@ -406,3 +406,269 @@ header h1 {
   .kcol, .kcol:first-child, .kcol:last-child { padding: 0 0 20px; }
   .kcol + .kcol { border-left: 0; border-top: 1.5px solid var(--k-col-sep); padding-top: 20px; }
 }
+
+/* =====================================================================
+   v5 新增：桌號小鍵盤、鍋數／附餐折抵列
+   ===================================================================== */
+:root {
+  /* 桌號小鍵盤 */
+  --pad-bg:         #ddd8c6;   /* 小鍵盤底色 */
+  --pad-border:     #948c68;   /* 小鍵盤外框 */
+  --pad-key-bg:     #f0eee1;   /* 數字鍵底色 */
+  --pad-key-text:   #5e5244;   /* 數字鍵的字 */
+  --pad-key-border: #b4aea0;   /* 數字鍵框線 */
+  --pad-fn-bg:      #cdbfa6;   /* 「清除」「⌫」鍵底色 */
+  --pad-fn-text:    #695844;
+  --pad-ok-bg:      #b9aa8b;   /* 「完成」鍵 */
+  --pad-ok-text:    #ffffff;
+  --pad-press:      #cfccbc;   /* 手指按下去時的底色 */
+
+  /* 鍋數／附餐／折抵列 */
+  --si-bg:          #e4dfcc;   /* 整列底色 */
+  --si-label:       #695844;   /* 「鍋」「附餐」「折抵」 */
+  --si-num:         #5e5244;   /* 數字 */
+  --si-disc:        #358d42;   /* 折抵金額 */
+  --si-over:        #96584b;   /* 「多 N 份照價」 */
+  --si-btn-bg:      #b9aa8b;   /* 「＋附餐」按鈕 */
+  --si-btn-text:    #ffffff;
+}
+
+.mode { position: relative; }
+.pad {
+  position: absolute; top: 100%; left: 0; margin-top: 8px; z-index: 5;
+  width: 280px; padding: 10px;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+  background: var(--pad-bg); border: 1.5px solid var(--pad-border); border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .25);
+}
+.pad button {
+  height: 54px; border-radius: 12px; font-size: 26px; font-family: var(--f-table);
+  background: var(--pad-key-bg); color: var(--pad-key-text); border: 1.5px solid var(--pad-key-border);
+}
+.pad button:active { background: var(--pad-press); }
+.pad button.fn { background: var(--pad-fn-bg); color: var(--pad-fn-text); font-family: var(--f-body); font-size: 20px; }
+.pad button.ok { grid-column: 1 / -1; background: var(--pad-ok-bg); color: var(--pad-ok-text); border-color: transparent; font-family: var(--f-body); font-size: 21px; }
+
+.setinfo {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 4px 8px;
+  margin-top: 8px; padding: 8px 12px; border-radius: 12px; background: var(--si-bg);
+  font-size: 18px;
+}
+.setinfo .si-l { color: var(--si-label); }
+.setinfo b { font-family: var(--f-qty); font-size: 22px; font-weight: 400; color: var(--si-num); margin-right: 8px; }
+.setinfo b.si-d { color: var(--si-disc); font-weight: 300; margin-right: 0; font-family: var(--f-body); font-size: 24px;  }
+.setinfo .si-over { font-size: 15px; color: var(--si-over); }
+.setinfo .si-go {
+  margin-left: auto; height: 36px; padding: 0 14px; border-radius: 10px; font-size: 17px;
+  background: var(--si-btn-bg); color: var(--si-btn-text);
+}
+
+/* =====================================================================
+   v6 新增：追加點餐、出單紀錄、訂單總覽（結帳／歷史／匯出）
+   ===================================================================== */
+:root {
+  /* 追加點餐按鈕（櫃檯右下角，在「清除」和「送出訂單」中間） */
+  --append-bg:      #F1EFE4;
+  --append-text:    #b77d57;
+  --append-border:  #F1EFE4;
+
+  /* 追加點餐：選訂單的視窗 */
+  --bp-bg:          #dbd9cd;   /* 每一張訂單的底色 */
+  --bp-border:      #92806c;
+  --bp-no:          #817a66;   /* 「# 5」 */
+  --bp-text:        #5e5244;   /* 桌號標籤文字 */
+  --bp-sub:         #8d806f;   /* 時間、品項小字 */
+
+  /* 出單紀錄 */
+  --k-ext-bg:       #dbd9cd;   /* 「追加」小標籤 */
+  --k-ext-text:     #c2661c;
+
+  /* 訂單總覽 */
+  --ov-seg-bg:      #cdbb93;   /* 「今日／歷史訂單」切換 */
+  --ov-seg-on-bg:   #5d4b23;
+  --ov-seg-on-text: #f5efe0;
+  --ov-seg-text:    #5d4b23;
+  --ov-export-bg:   #5d4b23;   /* 「匯出 CSV」按鈕 */
+  --ov-export-text: #f5efe0;
+  --ov-day-bg:      #cdbb93;   /* 歷史日期按鈕 */
+  --ov-day-text:    #5d4b23;
+  --ov-day-on-bg:   #5d4b23;
+  --ov-day-on-text: #f5efe0;
+  --ov-sec:         #5d4b23;   /* 「未結帳」「已結帳」小標題 */
+  --ov-sum2:        #69361b;   /* 「未結帳: n 單」那一行 */
+  --ov-add-bg:      #cdbb93;   /* 帳單裡「追加 14:05」小標籤 */
+  --ov-add-text:    #5d4b23;
+  --ov-pay-bg:      #85913b;   /* 「結帳」按鈕 */
+  --ov-pay-text:    #ffffff;
+  --ov-paid-card:   #cfcabb;   /* 已結帳的卡片底色（淡淡的） */
+  --ov-paid-text:   #a39c89;   /* 「# 5 已結帳」灰色字 */
+  --ov-paid-items:  #8d867a;   /* 已結帳帳單裡的品項字 */
+  --ov-unpay-bg:    #b9b19e;   /* 取消結帳的圓形 ✕ 按鈕 */
+  --ov-unpay-text:  #ffffff;
+}
+
+/* 櫃檯：三顆按鈕排在一列 */
+.cart .actions { gap: 8px; }
+.cart .actions .ghost { padding: 17px 14px; font-size: 19px; }
+.cart .actions .primary { padding: 17px 10px; font-size: 21px; }
+.append { background: var(--append-bg) !important; color: var(--append-text) !important; border: 1.5px solid var(--append-border); }
+.append:disabled { opacity: .5; }
+
+/* 追加點餐的選單 */
+#aList { display: flex; flex-direction: column; gap: 10px; max-height: 50vh; overflow-y: auto; }
+.bpick {
+  display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 14px; text-align: left;
+  background: var(--bp-bg); border: 1.5px solid var(--bp-border); border-radius: 14px; padding: 12px 16px;
+}
+.bpick .bp-no { font-family: var(--f-no); font-weight: 200; font-size: 30px; color: var(--bp-no); }
+.bpick .bp-tag { font-size: 22px; font-weight: 600; color: var(--bp-text); }
+.bpick .bp-t { font-size: 15px; color: var(--bp-sub); }
+.bpick small { flex-basis: 100%; font-size: 15px; color: var(--bp-sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bpick:active { filter: brightness(.94); }
+
+/* 出單紀錄 */
+.ticket .tf { justify-content: flex-start; }
+.ticket .ext { padding: 3px 4px; border-radius: 8px; font-size: 20px; font-weight: 300 ; background: var(--k-ext-bg); color: var(--k-ext-text); }
+
+/* 訂單總覽 */
+.ovbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; max-width: 900px; }
+.ovseg { width: 260px; background: var(--ov-seg-bg); border-color: transparent; }
+.ovseg button { color: var(--ov-seg-text); }
+.ovseg button.on { background: var(--ov-seg-on-bg); color: var(--ov-seg-on-text); }
+.export { height: 46px; padding: 0 22px; border-radius: 14px; font-size: 19px; background: var(--ov-export-bg); color: var(--ov-export-text); }
+.daystrip { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 14px; max-width: 900px; -webkit-overflow-scrolling: touch; }
+.day {
+  flex: none; width: 72px; height: 64px; border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: var(--ov-day-bg); color: var(--ov-day-text);
+}
+.day b { font-size: 20px; font-weight: 600; }
+.day small { font-size: 14px; }
+.day.on { background: var(--ov-day-on-bg); color: var(--ov-day-on-text); }
+.dsum2 { display: flex; align-items: baseline; gap: 56px; margin: -8px 0 12px; font-size: 22px; color: var(--ov-sum2); }
+.dsum2 b { font-family: var(--f-sum); font-size: 26px; font-weight: 400; }
+.sec { margin: 22px 0 10px; font-size: 22px; font-weight: 600; color: var(--ov-sec); }
+.sec small { margin-left: 8px; font-size: 17px; font-weight: 400; }
+.addmk { flex: none; font-size: 14px; padding: 2px 10px; background: var(--ov-add-bg); color: var(--ov-add-text); border-radius: 6px; }
+.dside { flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+.pay { height: 48px; padding: 0 26px; border-radius: 12px; font-size: 21px; font-weight: 600; background: var(--ov-pay-bg); color: var(--ov-pay-text); }
+.pay:active { filter: brightness(.92); }
+.paidrow { display: flex; align-items: center; gap: 10px; }
+.paidtxt { font-family: var(--f-no); font-weight: 200; font-size: 22px; color: var(--ov-paid-text); }
+.unpay { width: 34px; height: 34px; border-radius: 50%; font-size: 16px; line-height: 1; background: var(--ov-unpay-bg); color: var(--ov-unpay-text); }
+.drow.paid { background: var(--ov-paid-card); }
+.drow.paid .di, .drow.paid .dm, .drow.paid .dt { color: var(--ov-paid-items); font-weight: 400; }
+.drow.paid .no { color: var(--ov-paid-text); }
+.drow.paid .tag { opacity: .6; }
+
+
+
+/* =====================================================================
+   v10 新增：出單紀錄（便利貼牆）＋點餐動畫——取代之前的「v9 新增」那一段
+   ===================================================================== */
+:root {
+  --f-pile:          "Hiragino Sans", "Hiragino Kaku Gothic ProN", "PingFang TC", sans-serif;   /* 折疊圖示上的張數字型 */
+
+  /* 左下角：已折疊單的圖示 */
+  --pile-edge:       #8a8369;   /* 縮圖方塊的邊線 */
+  --pile-mask:       47, 40, 12;   /* 遮色片顏色（#2F280C 的 R, G, B） */
+  --pile-mask-alpha: 0.36;      /* 遮色片濃度：0 = 完全看不到，1 = 完全蓋住（照你的示意圖量出來是 0.36） */
+  --pile-count:      #ffffcb;   /* 張數數字的顏色 */
+  --pile-size:       59px;      /* 縮圖方塊的邊長（1:1） */
+  --pile-step:       5px;       /* 疊起來每一層錯開多少 */
+
+  /* 展開之後：收起按鈕、橫線、標題 */
+  --fold-btn-bg:     #e0d1ad;
+  --fold-btn-text:   #6a5944;
+  --fold-line:       #ffffd0;
+  --fold-title:      #f2ecc8;
+
+  /* 已折疊單（大欄位的那種一條一條的卡片） */
+  --fold-bg:         #dbd9cd;
+  --fold-no:         #8d867a;   /* 單號 */
+  --fold-text:       #5e5244;   /* 品項文字 */
+  --fold-pick:       #b57e3e;   /* 品名後的選擇（豬、羊…） */
+  --fold-time:       #6b6555;   /* 時間 */
+
+  --mini-w:          260px;     /* 櫃檯那一欄的寬度 */
+}
+
+.kcol { position: relative; }
+.orders { padding-bottom: 40px; }
+
+/* 單子：底下左邊單號、右邊時間 */
+.ticket .tf { justify-content: space-between; }
+.ticket .ago { font-size: 17px; }
+
+/* 櫃檯那一欄：窄，其他都跟大欄一樣 */
+.kcol.mini { flex: none; width: var(--mini-w); }
+.kcol.mini h2 { font-size: 22px; margin-bottom: 12px; }
+.kcol.mini .orders { grid-template-columns: 1fr; gap: 12px; }
+.kcol.mini .ticket .tag { white-space: nowrap; }
+
+/* 左下角：三個 1:1 圓角方塊疊在一起 */
+.pile {                                          /* 固定接在最新 4 張單的後面，要往下滑才看得到 */
+  position: relative; grid-column: 1 / -1; justify-self: start; margin-top: 2px; padding: 0; background: none;
+  width: calc(var(--pile-size) + var(--pile-step) * 2); height: calc(var(--pile-size) + var(--pile-step) * 2);
+}
+.pile .thumb {
+  position: absolute; width: var(--pile-size); height: var(--pile-size); overflow: hidden; border-radius: 10px;
+  background: var(--k-ticket-bg); border: 1.5px solid var(--pile-edge);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, .35); pointer-events: none;
+}
+.pile .thumb .ticket { width: 236px; transform: scale(.247); transform-origin: 0 0; margin: 0; border-radius: 0; box-shadow: none; }
+.pile .thumb.t0 { left: calc(var(--pile-step) * 2); top: 0; z-index: 3; }
+.pile .thumb.t1 { left: var(--pile-step); top: var(--pile-step); z-index: 2; }
+.pile .thumb.t2 { left: 0; top: calc(var(--pile-step) * 2); z-index: 1; }
+.pile .mask { position: absolute; inset: 0; background: rgba(var(--pile-mask), var(--pile-mask-alpha)); }
+.pile .cnt {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  font: 100 27px/1 var(--f-pile); color: var(--pile-count);
+}
+.pile:active { filter: brightness(.92); }
+
+/* 展開後：收起按鈕 → 橫線 → 標題 → 已折疊單 */
+.foldwrap { grid-column: 1 / -1; margin-top: 8px; }
+.foldbar { display: flex; justify-content: center; }
+.foldbtn { padding: 10px 44px; border-radius: 24px; font-size: 22px; background: var(--fold-btn-bg); color: var(--fold-btn-text); }
+.foldbtn:active { filter: brightness(.94); }
+.foldline { border: 0; height: 2px; margin: 22px 0 0; background: var(--fold-line); }
+.foldtitle { margin: 18px 0 16px; text-align: center; font-family: var(--f-ktitle); font-weight: 400; font-size: 32px; color: var(--fold-title); }
+.foldlist { display: grid; grid-template-columns: 1fr; gap: 12px; }
+.kcol:not(.mini) .foldlist { grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); }
+
+.fold { background: var(--fold-bg); border-radius: 16px; padding: 14px 20px 16px; color: var(--fold-text); }
+.fold .fh { display: flex; align-items: center; gap: 14px; margin-bottom: 8px; }
+.fold .no { font-family: var(--f-no); font-weight: 200; font-size: 34px; color: var(--fold-no); white-space: nowrap; }
+.fold .ago { margin-left: auto; font-size: 17px; color: var(--fold-time); }
+.fold .tag { font-size: 17px; }
+.fold .fi { display: flex; flex-wrap: wrap; gap: 4px 26px; font-size: 24px; line-height: 1.5; }
+.fold .fl { white-space: nowrap; }
+.fold .q { font-family: var(--f-kqty); }
+.fold .pk { color: var(--fold-pick); }
+.fold small { font-size: 16px; opacity: .8; }
+
+/* 櫃檯欄裡的已折疊單：就是縮小一點的單子 */
+.ticket.folded { padding: 12px 14px 10px; border-radius: 14px; }
+.ticket.folded .tag { font-size: 15px; }
+.ticket.folded li { padding: 6px 0 5px; }
+.ticket.folded li .q { min-width: 0; font-size: 21px; }
+.ticket.folded li .nm { font-size: 19px; }
+.ticket.folded .no { font-size: 28px; }
+.ticket.folded .ago { font-size: 15px; }
+
+/* =====================================================================
+   點餐動畫：點餐點 → 縮小飛進訂單清單，清單那一行滑進來（或閃一下）
+   ===================================================================== */
+:root { --line-flash: #e9dfa8; }                 /* 重複點同一個餐點時，那一行閃一下的顏色 */
+
+.fly { position: fixed; margin: 0; z-index: 90; pointer-events: none; transform-origin: center center; box-shadow: 0 6px 18px rgba(0, 0, 0, .3); }
+
+.line.new  { animation: lineIn .30s cubic-bezier(.2, .8, .2, 1) .25s both; }   /* .4s = 等飛過來才滑入；.5s = 滑入的速度 */
+.line.bump { animation: lineBump .35s ease .2s; }
+@keyframes lineIn   { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: none; } }
+@keyframes lineBump { 0% { background: transparent; } 30% { background: var(--line-flash); } 100% { background: transparent; } }
+@media (prefers-reduced-motion: reduce) { .line.new, .line.bump { animation: none; } .fly { display: none; } }
+
+
+
+.setinfo .si-over { display: none; } /*把「多 N 份照价」藏起来，折抵的金额不受影响*/

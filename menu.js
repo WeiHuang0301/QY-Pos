@@ -21,7 +21,8 @@
 // ----- 出餐區：左邊是代號（不要改），右邊是畫面上顯示的名稱 -----
 const STATIONS = {
   soup: "湯品・切肉",
-  prep: "其他出餐區"
+  prep: "其他出餐區",
+  counter: "櫃檯"
 };
 
 // ----- 小工具 -----
@@ -38,6 +39,7 @@ const CLASSIC_SIZE = {
 };
 
 // 每鍋附餐：選填，不選也不退錢。烏龍、拉麵補差價（20-10、25-10）
+const VEG_SAUCE = ["素沙茶及素醬油", "單素沙茶", "單素醬油"];
 const SET_MEAL = {
   label: "附餐主食", required: false, prefix: "附餐：",
   options: ["飯", "冬粉", "科學麵", "意麵", "蛋", "寬粉", "王子麵",
@@ -47,12 +49,12 @@ const SET_MEAL = {
 const MENU = [
   // ================= 鍋物（單子送湯品・切肉區） =================
   {
-    group: "鍋物", category: "經典鍋物", station: "soup", choices: [SET_MEAL],
+    group: "鍋物", category: "經典鍋物", station: "soup", /* choices: [SET_MEAL], */
     items: list(230, ["梅花豬肉鍋", "五花豬肉鍋", "上等雞肉鍋", "大眾牛肉鍋", "上選羊肉鍋"],
                 { choices: [CLASSIC_SIZE] })
   },
   {
-    group: "鍋物", category: "風味鍋物", station: "soup", choices: [SET_MEAL],
+    group: "鍋物", category: "風味鍋物", station: "soup", /* choices: [SET_MEAL], */
     items: [
       { name: "源佬麻辣鍋", price: 300, note: "無牛油・附油條", choices: [MEAT_PICK],
         options: ["不加油條", "不加蔥段", "不加香菜"] },
@@ -66,7 +68,7 @@ const MENU = [
     ]
   },
   {
-    group: "鍋物", category: "海陸鍋物", station: "soup", choices: [SET_MEAL],
+    group: "鍋物", category: "海陸鍋物", station: "soup", /* choices: [SET_MEAL], */
     items: [
       { name: "五福海陸鍋", price: 500, choices: [MEAT_PICK] },
       { name: "四喜海陸鍋", price: 330, choices: [MEAT_PICK] },
@@ -75,7 +77,7 @@ const MENU = [
     ]
   },
   {
-    group: "鍋物", category: "御肉鍋物", station: "soup", choices: [SET_MEAL],
+    group: "鍋物", category: "御肉鍋物", station: "soup", /* choices: [SET_MEAL], */
     items: [
       { name: "招牌牛肉鍋", price: 450 },
       { name: "霜降牛肉鍋", price: 350 },
@@ -85,7 +87,7 @@ const MENU = [
     ]
   },
   {
-    group: "鍋物", category: "海味鍋物", station: "soup", choices: [SET_MEAL],
+    group: "鍋物", category: "海味鍋物", station: "soup", /* choices: [SET_MEAL], */
     items: [
       { name: "海鮮總匯鍋", price: 380 },
       { name: "鮮蝦蛤蜊鍋", price: 340 },
@@ -95,7 +97,7 @@ const MENU = [
     ]
   },
   {
-    group: "鍋物", category: "素食鍋物", station: "soup", choices: [SET_MEAL],
+    group: "鍋物", category: "素食鍋物", station: "soup",  options: VEG_SAUCE, optLabel: "素食醬料", /* choices: [SET_MEAL], */
     items: [
       { name: "原味蔬素鍋", price: 240 },
       { name: "源佬麻辣素鍋", price: 290 },
@@ -110,7 +112,8 @@ const MENU = [
   {
     group: "加點", category: "主食", station: "prep",
     items: [
-      ...list(10, ["飯", "冬粉", "科學麵", "意麵", "蛋", "寬粉", "王子麵"]),
+      { name: "飯", price: 10, station: "counter" },
+      ...list(10, [ "冬粉", "科學麵", "意麵", "蛋", "寬粉", "王子麵"]),
       { name: "日式烏龍", price: 20 },
       { name: "韓國拉麵", price: 25 }
     ]
