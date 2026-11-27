@@ -525,6 +525,9 @@ header h1 {
 .bpick .bp-t { font-size: 15px; color: var(--bp-sub); }
 .bpick small { flex-basis: 100%; font-size: 15px; color: var(--bp-sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .bpick:active { filter: brightness(.94); }
+/* v11 新增：追加視窗（選中反白、確認鈕） */
+.bpick.sel { background: #ffe9a8; border-color: #c98a00; border-width: 2.5px; padding: 11px 15px; }
+#aOk:disabled { opacity: .45; }
 
 /* 出單紀錄 */
 .ticket .tf { justify-content: flex-start; }
