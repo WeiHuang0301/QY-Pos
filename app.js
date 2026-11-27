@@ -133,7 +133,7 @@ function pushLine(it, picks, opts, extra) {
 
 // 剛點的那個餐點格，縮小「飛」進訂單清單那一行（像 Safari 下載的效果）
 let tapEl = null;                                       // 剛點下去的餐點格（點格子時記下來）
-const FLY_MS = 350;                                     // 飛行時間（毫秒）；想快一點就改小
+const FLY_MS = 325;                                     // 飛行時間（毫秒）；想快一點就改小
 function flyToCart() {
   const src = tapEl;
   tapEl = null;
@@ -172,11 +172,12 @@ function calc(base = { pots: 0, sets: 0, disc: 0 }) {
 }
 
 // added = { key, isNew }：剛加進來的那一行（會捲到底，並帶入場動畫）；沒給的話維持原本的捲動位置
-let padTimer = 0;
+let holdPad = 0;                                        // 刪除後留下的「空位」高度（底部墊高），新增時會被新項目填掉
 function renderCart(added, padPx) {
   const keepTop = $("lines").scrollTop;
-  clearTimeout(padTimer);
-  $("lines").style.paddingBottom = padPx ? padPx + "px" : "";   // 刪除動畫時暫時墊高底部（見 removeLine）
+  if (padPx !== undefined) holdPad = padPx;
+  if (!cart.length) holdPad = 0;                         // 清單清空 → 不留空位
+  $("lines").style.paddingBottom = holdPad ? holdPad + "px" : "";
   if (!cart.length) {
     $("lines").innerHTML = '<p class="empty">點左邊的餐點加入訂單</p>';
   } else {
@@ -208,8 +209,16 @@ function renderCart(added, padPx) {
     $("setInfo").hidden = true;
   }
   $("total").textContent = money(c.total);
-  if (added) $("lines").scrollTop = $("lines").scrollHeight;     // 一直自動往下，永遠看得到最新那一行
-  else $("lines").scrollTop = keepTop;                           // 按 ＋／− 時不要跳回最上面
+  const box = $("lines");
+  if (added && !added.flash) {
+    const row = box.querySelector ? box.querySelector(".line.new, .line.bump") : null;
+    if (row && holdPad > 0) {                            // 有空位：新項目直接填進去，空位用掉才開始往下捲
+      if (added.isNew) { holdPad = Math.max(0, holdPad - row.offsetHeight); box.style.paddingBottom = holdPad ? holdPad + "px" : ""; }
+      box.scrollTop = keepTop;
+      const over = row.getBoundingClientRect().bottom - box.getBoundingClientRect().bottom;
+      if (over > 0) box.scrollTop += over;
+    } else box.scrollTop = box.scrollHeight;             // 一直自動往下，永遠看得到最新那一行
+  } else box.scrollTop = keepTop;                        // 按 ＋／− 時不要跳回最上面
   $("send").disabled = !cart.length;
   $("append").disabled = !cart.length;
 }
@@ -583,6 +592,7 @@ function updateBadge() {
 }
 
 // ---------- 追加點餐（把目前這些餐點，追加到某一張還沒結帳的帳單） ----------
+let aPick = 0;                                          // 追加視窗裡目前選到的帳單（要按「確認」才會真的追加）
 function openAppend() {
   if (!cart.length) return;
   const open = billsOfDay(dayKey(new Date())).filter(b => !b.paid).sort((a, b) => b.no - a.no);
@@ -593,6 +603,8 @@ function openAppend() {
       `<span class="bp-no"># ${b.no}</span><span class="bp-tag">${orderTag(b.first)}</span><span class="bp-t">${hhmm(b.time)}</span>` +
       `<small>${esc(names)}</small></button>`;
   }).join("");
+  aPick = 0;
+  $("aOk").disabled = true;
   $("aModal").hidden = false;
 }
 function closeAppend() { $("aModal").hidden = true; }
@@ -658,35 +670,33 @@ $("lines").addEventListener("click", e => {
   const k = Number(b.dataset.k);
   const line = cart[k];
   if (!line) return;
-    if (b.dataset.a === "inc") line.qty++;
+  if (b.dataset.a === "inc") line.qty++;
   if (b.dataset.a === "dec") {
     if (line.qty <= 1) { removeLine(line, b.closest && b.closest(".line")); return; }   // 減到沒有 → 那一行往上收起來
     line.qty--;
   }
-  renderCart();
+  renderCart(b.dataset.a === "inc" ? { key: line.key, isNew: false, flash: true } : undefined);   // 按 ＋：那一行閃一下黃底光（不捲動）
 });
 
 // 刪除一行：先播「往上收」的動畫，下面的行會跟著往上補位；動畫結束才真的從訂單移除
 const OUT_MS = 250;                                     // 收起來的速度（毫秒）
 function removeLine(line, row) {
   const box = $("lines");
-  let pad = 0;                                           // 清單捲在底部時，內容變短會讓「上面的往下掉」；先把底部墊高，才會是「下面的往上補」
+  let pad = holdPad;                                     // 刪除後留下空位：底部墊高，上面的行不會往下掉
   const done = () => {
     const i = cart.indexOf(line);
     if (i >= 0) cart.splice(i, 1);
     renderCart(undefined, pad);
-    if (pad) {                                           // 動畫結束後，再慢慢把清單貼回底部，然後拿掉墊高
-      const max = box.scrollHeight - pad - box.clientHeight;
-      if (box.scrollTop > max && box.scrollTo) box.scrollTo({ top: Math.max(0, max), behavior: "smooth" });
-      padTimer = setTimeout(() => { box.style.paddingBottom = ""; }, 350);
-    }
   };
   try {
     if (!row || !row.animate || row.dataset.leaving) { if (!row || !row.animate) done(); return; }
     if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) { done(); return; }
     row.dataset.leaving = "1";
     const h = row.getBoundingClientRect().height;
-    if (box.scrollHeight > box.clientHeight + 1) { pad = Math.ceil(h); box.style.paddingBottom = pad + "px"; }
+    // 只在「真的需要」時才墊高：刪掉之後內容還是比清單框高，而且已經往下捲了，才會有「掉下來」的問題
+    const after = box.scrollHeight - holdPad - h;        // 刪掉這一行後，內容本身（不含墊高）的高度
+    pad = (after > box.clientHeight && box.scrollTop > 0) ? Math.ceil(Math.max(0, box.scrollTop + box.clientHeight - after)) : 0;
+    box.style.paddingBottom = pad ? pad + "px" : "";
     row.style.overflow = "hidden";
     const a = row.animate(
       [{ height: h + "px", opacity: 1, transform: "translateY(0)", paddingTop: "12px", paddingBottom: "12px" },
@@ -735,8 +745,15 @@ $("aModal").addEventListener("click", e => { if (e.target === $("aModal")) close
 $("aList").addEventListener("click", e => {
   const b = e.target.closest("button");
   if (!b || !b.dataset.b) return;
+  aPick = Number(b.dataset.b);                          // 只是選取（反白），不會馬上送出
+  $("aList").querySelectorAll(".bpick").forEach(x => x.classList.toggle("sel", x === b));
+  $("aOk").disabled = false;
+});
+$("aOk").addEventListener("click", () => {
+  if (!aPick) return;
+  const id = aPick;
   closeAppend();
-  sendOrder(Number(b.dataset.b));
+  sendOrder(id);
 });
 
 // 訂單總覽：今日／歷史、選日期、結帳、取消結帳、匯出
