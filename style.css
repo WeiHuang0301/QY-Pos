@@ -724,4 +724,4 @@ header h1 {
 
 /* 追加的单子：右上角单号用追加的金黄色 */
 :root { --k-add-no: #c9a23c; }   /* 追加单的单号颜色（预设跟「追加」标签底色一样） */
-.ticket.add .no { color: var(--k-add-no); }
+.ticket.add .no { color: var(--k-ext-bg); }
