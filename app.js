@@ -402,7 +402,7 @@ function ticketHtml(o, s, mini) {
     (l.opts && l.opts.length ? `<small>（${l.opts.map(esc).join("、")}）</small>` : "") + `</span>`;
   const others = lines.filter(l => !l.pot), pots = lines.filter(l => l.pot);
   return `
-    <article class="ticket ${tagClass(o)} ${mini ? "mini" : ""}">
+    <article class="ticket ${tagClass(o)} ${mini ? "mini" : ""} ${o.extra ? "add" : ""}">
       <div class="th"><span class="tag ${tagClass(o)}">${kTag(o)}</span><span class="no"># ${o.no}</span></div>
       <div class="items">${others.length ? `<div class="row flow">${others.map(item).join("")}</div>` : ""}` +
         pots.map(l => `<div class="row">${item(l)}</div>`).join("") + `</div>
