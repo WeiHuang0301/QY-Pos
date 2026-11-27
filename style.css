@@ -672,6 +672,52 @@ header h1 {
 @keyframes lineBump { 0% { background: transparent; } 30% { background: var(--line-flash); } 100% { background: transparent; } }
 @media (prefers-reduced-motion: reduce) { .line.new, .line.bump { animation: none; } .fly { display: none; } }
 
+/* ===== v12 新增：出單紀錄的單子（照你的示意圖）===== */
+:root {
+  --kt-tag:        #4f4538;   /* 標籤文字：「內用 08 號」「外帶：」 */
+  --kt-cooked:     #a8402a;   /* 「煮」 */
+  --kt-raw:        #2c5aa0;   /* 「生鮮」 */
+  --kt-tag-size:   24px;      /* 標籤字體大小（大欄） */
+  --kt-no-size:    32px;      /* 右上角單號大小（大欄） */
+  --kt-item-size:  20px;      /* 品項字體大小（大欄與櫃檯欄一樣） */
+  --kt-item-weight:300;       /* 品項粗細（Lantinghei 只有 300／600） */
+  --kt-time-size:  15px;      /* 右下角時間 */
+  --k-ext-bg:      #c9a23c;   /* 「追加」小標籤底色 */
+  --k-ext-text:    #f6efd9;
+  --k-num:         #6b6555;   /* 單號顏色 */
+}
+
+.ticket { padding: 24px 28px 16px; border-radius: 20px; }
+.ticket .th { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 14px; }
+.ticket .tag {
+  display: block; background: none; padding: 0; border-radius: 0;
+  font-size: var(--kt-tag-size); font-weight: 600; color: var(--kt-tag); white-space: nowrap;
+}
+.ticket .tag .mc.cooked { color: var(--kt-cooked); }
+.ticket .tag .mc.raw { color: var(--kt-raw); }
+.ticket .ext { margin-left: 10px; vertical-align: middle; padding: 2px 10px; border-radius: 8px; font-size: 15px; font-weight: 600; background: var(--k-ext-bg); color: var(--k-ext-text); }
+.ticket .no { font-size: var(--kt-no-size); font-weight: 600; font-style: italic; color: var(--k-num); }
+
+.ticket .items { flex: 1; }
+.ticket .row { font-size: var(--kt-item-size); font-weight: var(--kt-item-weight); line-height: 1.6; color: var(--k-name); }
+.ticket .row.flow { display: flex; flex-wrap: wrap; gap: 2px 22px; }
+.ticket .it { white-space: nowrap; }
+.ticket .it .q { font-family: var(--f-kqty); font-size: inherit; font-weight: inherit; color: inherit; }
+.ticket .it .pk { color: var(--k-pick); }
+.ticket .it small { font-size: 15px; color: var(--k-opt); }
+.ticket .tf { justify-content: flex-end; margin-top: 8px; }
+.ticket .ago { font-size: var(--kt-time-size); }
+
+/* 櫃檯（窄欄）：標籤和單號小一點，品項字跟大欄一樣大 */
+.ticket.mini { padding: 16px 18px 12px; border-radius: 16px; }
+.ticket.mini .th { margin-bottom: 8px; }
+.ticket.mini .tag { font-size: 16px; }
+.ticket.mini .ext { font-size: 12px; padding: 1px 7px; margin-left: 6px; }
+.ticket.mini .no { font-size: 22px; }
+
+/* 展開後的「已折疊單」：跟最新的單子一樣大 */
+.foldlist, .kcol:not(.mini) .foldlist { grid-template-columns: repeat(auto-fill, minmax(236px, 1fr)); gap: 14px; }
+.kcol.mini .foldlist { grid-template-columns: 1fr; gap: 12px; }
 
 
 .setinfo .si-over { display: none; } /*把「多 N 份照价」藏起来，折抵的金额不受影响*/
