@@ -667,7 +667,7 @@ header h1 {
 .fly { position: fixed; margin: 0; z-index: 90; pointer-events: none; transform-origin: center center; box-shadow: 0 6px 18px rgba(0, 0, 0, .3); }
 
 .line.new  { animation: lineIn .30s cubic-bezier(.2, .8, .2, 1) .25s both; }   /* .4s = 等飛過來才滑入；.5s = 滑入的速度 */
-.line.bump { animation: lineBump .35s ease .2s; }
+.line.bump { animation: lineBump .30s ease 0s; }
 @keyframes lineIn   { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: none; } }
 @keyframes lineBump { 0% { background: transparent; } 30% { background: var(--line-flash); } 100% { background: transparent; } }
 @media (prefers-reduced-motion: reduce) { .line.new, .line.bump { animation: none; } .fly { display: none; } }
