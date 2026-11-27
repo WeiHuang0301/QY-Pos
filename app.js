@@ -30,7 +30,7 @@ const catsOf = g => MENU.filter(c => c.group === g);
 
 // ---------- 畫面上的文字（想改字就改這裡） ----------
 const MODES = { dinein: "內用", cooked: "外帶-熟", raw: "外帶生鮮" };           // 櫃台「內用／外帶」切換按鈕上的字
-const MODE_TAGS = { dinein: "內用", cooked: "外帶-C熟", raw: "外帶-R生鮮" };   // 廚房與已完成單子上的標籤字
+const MODE_TAGS = { dinein: "內用", cooked: "外帶：煮", raw: "外帶：生鮮" };   // 廚房與已完成單子上的標籤字
 const OPTIONS_LABEL = "隨附調整";                                               // 彈出視窗裡「可選客製」那一組的標題
 
 let cart = [];            // 目前正在輸入的訂單
@@ -44,9 +44,15 @@ const optName = o => (typeof o === "string" ? o : o.name);
 const optExtra = o => (typeof o === "string" ? 0 : o.extra || 0);
 
 // 單子上的標籤：「內用 8 號」「外帶-R生鮮」
-const tagText = o => (o.mode === "dinein" ? "內用 " + o.table + " 號" + (o.side ? "・" + o.side : "") : MODE_TAGS[o.mode] || "");
+const padTable = t => (/^\d+$/.test(String(t)) ? String(t).padStart(2, "0") : t);   // 桌號補成兩位數：8 → 08
+const tagText = o => (o.mode === "dinein" ? "內用 " + padTable(o.table) + " 號" + (o.side ? "・" + o.side : "") : MODE_TAGS[o.mode] || "");
 const orderTag = o => esc(tagText(o));
 const tagClass = o => (o.mode === "dinein" ? "dine" : "take");
+// 出單紀錄用的標籤：「外帶：」後面那個字（煮／生鮮）會單獨上色（.mc.cooked / .mc.raw）
+const tagHtml = o => {
+  const t = tagText(o), i = t.indexOf("：");
+  return i < 0 ? esc(t) : esc(t.slice(0, i + 1)) + `<span class="mc ${o.mode}">${esc(t.slice(i + 1))}</span>`;
+};
 // 品名後面接選擇：「養生藥膳鍋 / 豬」（選擇的部分會上色）
 const nameHtml = (name, picks) =>
   esc(name) + (picks || []).map(p => ` / <span class="pk${p.includes("：") ? " set" : ""}">${esc(p)}</span>`).join("");
@@ -387,34 +393,27 @@ let lastKitchen = "";
 const MINI_STATIONS = ["counter"];
 
 // 追加的單，標籤後面多一段「 – 追加」
-const kTag = o => orderTag(o) + (o.extra ? " – 追加" : "");
+const kTag = o => tagHtml(o) + (o.extra ? `<span class="ext">追加</span>` : "");
 
-// 單子：上面標籤、中間品項、底下左邊單號、右邊時間（每個出餐區都一樣）
-// folded = true 時是「已折疊單」裡的迷你單（字小一點）
-function ticketHtml(o, s, mini, folded) {
+// 單子：上面左邊標籤、右邊單號；中間品項（一般品項排成一行一行，鍋物各自獨立一行）；右下角時間
+function ticketHtml(o, s, mini) {
   const lines = o.lines.filter(l => l.station === s);
+  const item = l => `<span class="it"><span class="q">${l.qty}x</span> ${nameHtml(l.name, l.picks)}` +
+    (l.opts && l.opts.length ? `<small>（${l.opts.map(esc).join("、")}）</small>` : "") + `</span>`;
+  const others = lines.filter(l => !l.pot), pots = lines.filter(l => l.pot);
   return `
-    <article class="ticket ${tagClass(o)} ${mini ? "mini" : ""} ${folded ? "folded" : ""}">
-      <div class="th"><span class="tag ${tagClass(o)}">${kTag(o)}</span></div>
-      <ul>${lines.map(l =>
-        `<li><span class="q">${l.qty} x</span><div class="ln"><span class="nm">${nameHtml(l.name, l.picks)}</span>` +
-        (l.opts && l.opts.length ? `<em>${l.opts.map(esc).join("、")}</em>` : "") +
-        `</div></li>`).join("")}</ul>
-      <div class="tf"><span class="no"># ${o.no}</span><span class="ago">${hhmm(o.time)}</span></div>
+    <article class="ticket ${tagClass(o)} ${mini ? "mini" : ""}">
+      <div class="th"><span class="tag ${tagClass(o)}">${kTag(o)}</span><span class="no"># ${o.no}</span></div>
+      <div class="items">${others.length ? `<div class="row flow">${others.map(item).join("")}</div>` : ""}` +
+        pots.map(l => `<div class="row">${item(l)}</div>`).join("") + `</div>
+      <div class="tf"><span class="ago">${hhmm(o.time)}</span></div>
     </article>`;
 }
 
+// 出單紀錄的欄位順序：一般出餐區在左、窄的（櫃檯）固定在最右邊；標題前面依序加 A. B. C.
+const KITCHEN_ORDER = STATION_KEYS.filter(s => !MINI_STATIONS.includes(s)).concat(STATION_KEYS.filter(s => MINI_STATIONS.includes(s)));
 const PILE_KEEP = 4;          // 每個出餐區直接顯示最新的幾張（更早的收進左下角那一疊）
 const pileOpen = {};          // 哪個出餐區的「已折疊單」已展開
-
-// 已折疊單（大欄位用）：第一行 單號・標籤・時間，下面是品項（字比以前大）
-function foldHtml(o, s) {
-  const lines = o.lines.filter(l => l.station === s);
-  return `<div class="fold ${tagClass(o)}">` +
-    `<div class="fh"><span class="no"># ${o.no}</span><span class="tag ${tagClass(o)}">${kTag(o)}</span><span class="ago">${hhmm(o.time)}</span></div>` +
-    `<div class="fi">${lines.map(l => `<span class="fl"><span class="q">${l.qty}x</span> ${nameHtml(l.name, l.picks)}` +
-      (l.opts && l.opts.length ? `<small>（${l.opts.map(esc).join("、")}）</small>` : "") + `</span>`).join("")}</div></div>`;
-}
 
 // 左下角那一疊：最前面三張「已折疊單」的縮圖，疊成 1:1 圓角方塊；最上面一張蓋遮色片、中間顯示張數
 function pileHtml(older, s) {
@@ -428,7 +427,7 @@ function renderKitchen() {
   const today = dayKey(new Date());
   const orders = Store.load().filter(o => dayKey(o.time) === today)
     .sort((a, b) => b.id - a.id);                                    // 最新的在最上面（id 越大越新）
-  const html = STATION_KEYS.map(s => {
+  const html = KITCHEN_ORDER.map((s, ci) => {
     const mine = orders.filter(o => o.lines.some(l => l.station === s));
     const fresh = mine.slice(0, PILE_KEEP), older = mine.slice(PILE_KEEP);
     const open = !!pileOpen[s] && older.length > 0;
@@ -436,9 +435,9 @@ function renderKitchen() {
     const folds = open
       ? `<div class="foldwrap"><div class="foldbar"><button class="foldbtn" data-s="${s}">收起</button></div>` +
         `<hr class="foldline"><h3 class="foldtitle">已折疊單</h3>` +
-        `<div class="foldlist">${older.map(o => mini ? ticketHtml(o, s, true, true) : foldHtml(o, s)).join("")}</div></div>`
+        `<div class="foldlist">${older.map(o => ticketHtml(o, s, mini)).join("")}</div></div>`
       : "";
-    return `<section class="kcol ${mini ? "mini" : ""}"><h2>${esc(STATIONS[s])}</h2>` +
+    return `<section class="kcol ${mini ? "mini" : ""}"><h2>${String.fromCharCode(65 + ci)}. ${esc(STATIONS[s])}</h2>` +
       `<div class="orders">${fresh.length ? fresh.map(o => ticketHtml(o, s, mini)).join("") :
         '<p class="empty">今天還沒有出單</p>'}` +
       (older.length && !open ? pileHtml(older, s) : "") +          // 圖示固定接在最新 4 張的後面（要往下滑才看得到）
